@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diet Plan, MUSCLE MAFIA GYM KAHUTA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      /* Base */
+      --bg1:#eef2f7;
+      --bg2:#dce4ee;
+      --panel:#ffffff;
+      --card:#f9fbfd;
+      --line:#cbd4df;
+      --ink:#222;
+      --ink-soft:#555;
+
+      /* Theme colors */
+      --red:#e63946;          /* primary brand red */
+      --slate:#2c3e50;        /* deep slate for alternating headers */
+    }
+
+    body{
+      margin:0;
+      font-family:'Montserrat',sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--ink);
+    }
+
+    main#printable{max-width:1080px;margin:28px auto;padding:18px;}
+    .page-frame{padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line);box-shadow:0 12px 28px rgba(0,0,0,.12);}
+    .container{background:var(--card);border-radius:14px;padding:20px;}
+
+    /* Header */
+    header{position:relative;padding:20px 20px 20px 120px;border-bottom:3px solid var(--red);}
+    .logo-box{position:absolute;left:18px;top:50%;transform:translateY(-50%);background:#2c3e50;padding:8px;border-radius:10px;}
+    .logo-box img{height:70px;display:block;}
+
+    .brand-name{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:1px;margin:0;color:var(--slate);}
+    .brand-name .accent{color:var(--red);}
+    .tagline{margin:4px 0 0;font-weight:600;font-size:14px;color:var(--red);letter-spacing:.5px;}
+
+    .nutri-banner{
+      margin-top:10px;
+      padding:8px 12px;
+      background:var(--slate);
+      color:#fff;
+      font-size:14px;
+      font-weight:600;
+      border-radius:6px;
+      display:inline-block;
+    }
+    .nutri-banner span{font-weight:700;color:#ffe082;}
+    .nutri-banner .phone{margin-left:12px;font-style:italic;font-weight:500;color:#f9dede;}
+
+    /* Info grid */
+    .info-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:14px 22px;margin:20px 0;}
+    .field label{display:block;margin-bottom:6px;font-weight:600;color:var(--ink-soft);}
+    .field input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);}
+
+    /* Sections */
+    .section{margin:18px 0 24px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+    .section-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;color:#fff;}
+    .section-header h3{margin:0;font-size:18px;}
+    .add-btn{background:#fff;color:var(--ink);border:1px solid var(--line);padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:600;}
+
+    /* Two alternating header colors, red and slate */
+    .section.header-red .section-header{background:var(--red);}
+    .section.header-slate .section-header{background:var(--slate);}
+
+    table{width:100%;border-collapse:collapse;font-size:14px;}
+    th,td{padding:8px;text-align:center;border-bottom:1px solid var(--line);}
+    th{background:#f2f5f8;color:var(--slate);}
+
+    select, input[type="text"].custom-input{
+      width:100%;padding:6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);
+    }
+    .custom-input{display:none;} /* shown only when Custom is selected */
+
+    .remove-btn{background:#e74c3c;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;}
+
+    .totals{margin:10px;padding:10px;text-align:center;font-weight:600;background:#f4f6f9;border-radius:6px;}
+    .summary{padding:16px;border:1px solid var(--line);border-radius:8px;background:#f4f6f9;}
+    .summary h3{margin:0 0 8px;}
+    .controls{margin-top:10px;}
+    .print-btn{background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:700;}
+
+    /* Print only the planner */
+    @page{size:A4;margin:10mm;}
+    @media print{
+      body *{visibility:hidden;}
+      #printable,#printable *{visibility:visible;}
+      #printable{position:absolute;left:0;top:0;width:190mm;}
+      .add-btn,.remove-btn{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<main id="printable">
+  <div class="page-frame">
+    <div class="container">
+      <header>
+        <div class="logo-box">
+          <img src="/Users/shahidabbas/Downloads/ChatGPT Image Aug 31, 2025, 11_26_44 AM.png" alt="Logo"/>
+        </div>
+        <h1 class="brand-name"><span class="accent">MUSCLE MAFIA</span> GYM KAHUTA</h1>
+        <p class="tagline">"Fuel your body, power your mind, transform your life"</p>
+        <div class="nutri-banner">
+          <span>Nutrition Specialist:</span> Abdul Nabeel 
+          <span class="phone">📞 +92 349 8948105</span>
+        </div>
+      </header>
+
+      <!-- Info -->
+      <div class="info-grid">
+        <div class="field"><label>Student Name</label><input type="text"></div>
+        <div class="field"><label>Date</label><input id="planDate" type="date"></div>
+        <div class="field"><label>Weight, kg</label><input type="number"></div>
+        <div class="field"><label>Height, cm</label><input type="number"></div>
+        <div class="field"><label>Age</label><input type="number"></div>
+      </div>
+
+      <!-- Sections, alternating header colors -->
+      <section class="section header-red" id="morning">
+        <div class="section-header"><h3>Morning Drink</h3><button class="add-btn" onclick="addRow('morning-table')">+ Add</button></div>
+        <table id="morning-table"><tr><th>Item</th><th>Qty</th><th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th><th>Action</th></tr></table>
+        <div class="totals" id="morning-total"></div>
+      </section>
+
+      <section class="section header-slate" id="breakfast">
+        <div class="section-header"><h3>Breakfast</h3><button class="add-btn" onclick="addRow('breakfast-table')">+ Add</button></div>
+        <table id="breakfast-table"><tr><th>Item</th><th>Qty</th><th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th><th>Action</th></tr></table>
+        <div class="totals" id="breakfast-total"></div>
+      </section>
+
+      <section class="section header-red" id="lunch">
+        <div class="section-header"><h3>Lunch</h3><button class="add-btn" onclick="addRow('lunch-table')">+ Add</button></div>
+        <table id="lunch-table"><tr><th>Item</th><th>Qty</th><th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th><th>Action</th></tr></table>
+        <div class="totals" id="lunch-total"></div>
+      </section>
+
+      <section class="section header-slate" id="dinner">
+        <div class="section-header"><h3>Dinner</h3><button class="add-btn" onclick="addRow('dinner-table')">+ Add</button></div>
+        <table id="dinner-table"><tr><th>Item</th><th>Qty</th><th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th><th>Action</th></tr></table>
+        <div class="totals" id="dinner-total"></div>
+      </section>
+
+      <div class="summary">
+        <h3>Daily Nutrition Summary</h3>
+        <p id="daily-summary">Calories 0 kcal, Protein 0 g, Fat 0 g, Carbs 0 g, Fiber 0 g</p>
+        <div class="controls"><button class="print-btn" onclick="window.print()">Print or Save</button></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  /* Big, practical list of foods */
+  const items = [
+    "Oats","Whey Protein","Eggs, Whole","Egg Whites","Milk","Yogurt, Plain","Greek Yogurt","Paneer","Lassi",
+    "Chicken Breast","Chicken Thigh","Beef, Lean","Mutton","Fish, Rohu","Fish, Salmon","Tuna, Canned",
+    "Chapati","Roti, Whole Wheat","Paratha","White Rice","Brown Rice","Quinoa","Boiled Rice",
+    "Dal, Masoor","Dal, Moong","Dal, Chana","Chana, Boiled","Rajma, Kidney Beans","Lobia, Black eyed beans",
+    "Potato, Boiled","Sweet Potato","Mixed Sabzi","Palak, Spinach","Bhindi, Okra","Cabbage","Cauliflower",
+    "Peanut Butter","Peanuts","Almonds","Walnuts","Cashews","Pistachios","Chia Seeds","Flaxseed",
+    "Dates","Raisins","Figs, Dried","Banana","Apple","Orange","Mango","Berries, Mixed",
+    "Bread, Brown","Bread, Multigrain","Olive Oil","Ghee","Honey","Jaggery",
+    "Custom"
+  ];
+
+  const qtyOptions = [
+    "1 tsp","1 tbsp","2 tbsp","3 tbsp",
+    "1 pc","2 pcs","3 pcs","5 pcs",
+    "50 g","75 g","100 g","150 g","200 g","250 g","300 g",
+    "1 slice","2 slices",
+    "1 cup","1.5 cup","2 cup",
+    "250 ml","300 ml","500 ml",
+    "Custom"
+  ];
+
+  /* Wider numeric options so you can cover more cases */
+  const numOptions = [0,5,10,15,20,25,30,40,50,60,70,80,90,100,120,150,180,200,225,250,275,300,325,350,400,450,500,600,700,800,900,1000];
+
+  /* Add a row, with Custom support for editable name */
+  function addRow(tableId){
+    const table = document.getElementById(tableId);
+    const row = table.insertRow(-1);
+
+    row.innerHTML = `
+      <td>
+        <div class="item-cell">
+          <select class="item-select" onchange="onItemChange(this)">
+            ${items.map(i => `<option value="${i}">${i}</option>`).join("")}
+          </select>
+          <input type="text" class="custom-input" placeholder="Enter custom item name">
+        </div>
+      </td>
+      <td><select onchange="updateTotals()">${qtyOptions.map(q=>`<option value="${q}">${q}</option>`).join("")}</select></td>
+      <td><select onchange="updateTotals()">${numOptions.map(n=>`<option value="${n}">${n}</option>`).join("")}</select></td>
+      <td><select onchange="updateTotals()">${numOptions.map(n=>`<option value="${n}">${n}</option>`).join("")}</select></td>
+      <td><select onchange="updateTotals()">${numOptions.map(n=>`<option value="${n}">${n}</option>`).join("")}</select></td>
+      <td><select onchange="updateTotals()">${numOptions.map(n=>`<option value="${n}">${n}</option>`).join("")}</select></td>
+      <td><select onchange="updateTotals()">${numOptions.map(n=>`<option value="${n}">${n}</option>`).join("")}</select></td>
+      <td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+    `;
+  }
+
+  /* Toggle between select and text input when Custom is chosen */
+  function onItemChange(selectEl){
+    const container = selectEl.closest(".item-cell");
+    const input = container.querySelector(".custom-input");
+    if(selectEl.value === "Custom"){
+      selectEl.style.display = "none";
+      input.style.display = "block";
+      input.focus();
+      input.addEventListener("input", updateTotals);
+      input.addEventListener("blur", () => { /* keep editable, totals still update on blur */ });
+    }else{
+      input.style.display = "none";
+      selectEl.style.display = "block";
+    }
+    updateTotals();
+  }
+
+  function removeRow(btn){
+    btn.closest("tr").remove();
+    updateTotals();
+  }
+
+  function updateTotals(){
+    let day = {cal:0,pro:0,fat:0,carb:0,fiber:0};
+    const ids = ["morning-table","breakfast-table","lunch-table","dinner-table"];
+
+    ids.forEach(id=>{
+      const t = document.getElementById(id);
+      let meal = {cal:0,pro:0,fat:0,carb:0,fiber:0};
+      for(let i=1;i<t.rows.length;i++){
+        const c = t.rows[i].cells;
+        const cal  = parseInt(c[2].querySelector("select").value) || 0;
+        const pro  = parseInt(c[3].querySelector("select").value) || 0;
+        const fat  = parseInt(c[4].querySelector("select").value) || 0;
+        const carb = parseInt(c[5].querySelector("select").value) || 0;
+        const fib  = parseInt(c[6].querySelector("select").value) || 0;
+        meal.cal+=cal; meal.pro+=pro; meal.fat+=fat; meal.carb+=carb; meal.fiber+=fib;
+      }
+      document.getElementById(id.replace("table","total")).innerText =
+        `Total ${meal.cal} kcal, ${meal.pro} g protein, ${meal.fat} g fat, ${meal.carb} g carbs, ${meal.fiber} g fiber`;
+      day.cal+=meal.cal; day.pro+=meal.pro; day.fat+=meal.fat; day.carb+=meal.carb; day.fiber+=meal.fiber;
+    });
+
+    document.getElementById("daily-summary").innerText =
+      `Calories ${day.cal} kcal, Protein ${day.pro} g, Fat ${day.fat} g, Carbs ${day.carb} g, Fiber ${day.fiber} g`;
+  }
+
+  /* Set date to today */
+  document.getElementById("planDate").value = new Date().toISOString().split("T")[0];
+
+  /* Start with one row per meal */
+  ["morning-table","breakfast-table","lunch-table","dinner-table"].forEach(addRow);
+</script>
+</body>
+</html>
