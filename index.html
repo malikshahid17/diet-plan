@@ -15,8 +15,8 @@
       --ink:#222;
       --ink-soft:#555;
 
-      --red:#e63946;     /* brand red */
-      --slate:#2c3e50;   /* deep slate */
+      --red:#e63946;
+      --slate:#2c3e50;
     }
 
     html,body{height:100%;}
@@ -27,6 +27,8 @@
       color:var(--ink);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+
+      /* keep brand colors in print */
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -91,6 +93,35 @@
     .btn.icon{display:inline-flex;align-items:center;gap:8px;}
     .btn .plus{font-weight:900;font-size:16px}
 
+    /* BMR card */
+    .bmr-card{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      padding:14px;
+      margin:6px 0 20px;
+    }
+    .bmr-head{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      background:var(--slate);color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:10px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .bmr-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(160px, 1fr));
+      gap:10px;
+    }
+    .bmr-stats{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .stat{
+      background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-weight:700;
+    }
+    .stat small{display:block;font-weight:600;color:#666;}
+
     /* sections */
     .section{margin:18px 0 24px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
     .section-header{
@@ -98,9 +129,7 @@
       padding:10px 14px;color:#fff;flex-wrap:wrap;
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
-    .section-title[contenteditable="true"]{
-      outline:none;border-bottom:1px dashed rgba(255,255,255,.45);
-    }
+    .section-title[contenteditable="true"]{outline:none;border-bottom:1px dashed rgba(255,255,255,.45);}
     .section-header h3{margin:0;font-size:18px;}
     .add-btn{
       background:#fff;color:var(--ink);
@@ -109,6 +138,11 @@
     }
     .header-red .section-header{background:var(--red);}
     .header-slate .section-header{background:var(--slate);}
+
+    .delete-meal{
+      background:#fff;color:#111;border:1px solid var(--line);
+      padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700;
+    }
 
     /* table responsive wrapper */
     .table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;}
@@ -140,13 +174,15 @@
       body *{visibility:hidden;}
       #printable,#printable *{visibility:visible;}
       #printable{position:absolute;left:0;top:0;width:190mm;}
-      .add-btn,.remove-btn,.btn{display:none !important;}
+      .add-btn,.remove-btn,.btn,.delete-meal{display:none !important;}
       .table-wrap{overflow:visible;}
     }
 
     /* mobile tweaks */
     @media (max-width: 900px){
       .info-grid{grid-template-columns:1fr;gap:12px;}
+      .bmr-grid{grid-template-columns: repeat(2, minmax(160px, 1fr));}
+      .bmr-stats{grid-template-columns: repeat(2, minmax(120px, 1fr));}
     }
     @media (max-width: 768px){
       main#printable{padding:12px;margin:16px auto;}
@@ -173,6 +209,8 @@
       .brand-name{font-size:30px;}
       .nutri-banner{display:block;}
       table{min-width:640px;}
+      .bmr-grid{grid-template-columns:1fr;}
+      .bmr-stats{grid-template-columns:1fr;}
     }
   </style>
 </head>
@@ -184,13 +222,12 @@
 
       <header>
         <div class="logo-box">
-          <!-- change to your repo image name if needed -->
           <img src="gym_logo.png" alt="Logo">
         </div>
         <h1 class="brand-name"><span class="accent">MUSCLE MAFIA</span> GYM KAHUTA</h1>
         <p class="tagline">"Fuel your body, power your mind, transform your life"</p>
         <div class="nutri-banner">
-          <span>Nutrition Specialist:</span> Abdul Nabeel Saqbi
+          <span>Nutrition Specialist:</span> Abdul Nabeel
           <span class="phone">📞 +92 349 8948105</span>
         </div>
       </header>
@@ -204,12 +241,53 @@
         <div class="field"><label>Age</label><input id="age" type="number" inputmode="numeric" placeholder="25"></div>
       </div>
 
+      <!-- BMR and TDEE -->
+      <section class="bmr-card" id="bmrCard">
+        <div class="bmr-head">
+          <strong>BMR and TDEE Calculator</strong>
+          <span style="font-size:13px;opacity:.9">Uses Mifflin St Jeor, then applies activity factor</span>
+        </div>
+        <div class="bmr-grid">
+          <div class="field">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Activity Level</label>
+            <select id="activity">
+              <option value="1.2">Sedentary, little or no exercise</option>
+              <option value="1.375">Light, 1 to 3 days per week</option>
+              <option value="1.55">Moderate, 3 to 5 days per week</option>
+              <option value="1.725">Active, 6 to 7 days per week</option>
+              <option value="1.9">Very active, physical job or two sessions</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Goal</label>
+            <select id="goal">
+              <option value="0">Maintenance</option>
+              <option value="-0.15">Cut, about 15 percent deficit</option>
+              <option value="0.10">Lean bulk, about 10 percent surplus</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bmr-stats">
+          <div class="stat"><small>BMR, kcal per day</small><span id="bmrOut">0</span></div>
+          <div class="stat"><small>Maintenance, kcal per day</small><span id="tdeeOut">0</span></div>
+          <div class="stat"><small>Target intake, kcal per day</small><span id="targetOut">0</span></div>
+        </div>
+      </section>
+
       <div class="toolbar">
         <button class="btn icon primary" onclick="addMealCard()"><span class="plus">+</span> Add meal</button>
         <button class="btn" onclick="window.print()">Print or Save</button>
       </div>
 
-      <!-- Initial meals get injected here -->
+      <!-- Meals get injected here -->
       <div id="meals"></div>
 
       <div class="summary">
@@ -222,9 +300,7 @@
 </main>
 
 <script>
-  /* Nutrition database, macros per serving
-     names are clean, amounts are in Serving, Qty multiplies them
-  */
+  /* Nutrition database, macros per serving */
   const DB = {
     // grains, dairy, protein
     "Oats":[ s("100 g",389,16.9,6.9,66.3,10.6), s("50 g",195,8.5,3.5,33.2,5.3) ],
@@ -269,7 +345,7 @@
     "Flaxseed":[ s("1 tbsp, 10 g",55,1.9,4.3,3,2.8) ],
     "Pumpkin Seeds":[ s("30 g",170,9,14,5,2) ],
     "Watermelon Seeds":[ s("30 g",170,8,13,4,0) ],
-    "Basil Seeds":[ s("1 tbsp, 12 g",58,2,3,5,5) ],  // approx
+    "Basil Seeds":[ s("1 tbsp, 12 g",58,2,3,5,5) ],
 
     // fruits and veg
     "Banana":[ s("1 medium",105,1.3,0.3,27,3.1) ],
@@ -305,12 +381,12 @@
   function s(serving, cal, pro, fat, carb, fiber){ return { serving, cal, pro, fat, carb, fiber }; }
   const QTY_OPTIONS = [1,2,3,4,5,6,8,10];
 
-  /* Add initial four meals and allow adding more */
+  /* Meal management */
   const mealsRoot = document.getElementById("meals");
   let mealCount = 0;
   const headerColors = ["header-red","header-slate"]; // alternate
 
-  function addMealCard(title="Morning Drink"){
+  function addMealCard(title="New Meal"){
     const colorClass = headerColors[mealCount % headerColors.length];
     const idBase = `meal${Date.now()}_${Math.floor(Math.random()*10000)}`;
     const tableId = `${idBase}-table`;
@@ -321,7 +397,10 @@
     section.innerHTML = `
       <div class="section-header">
         <h3 class="section-title" contenteditable="true">${title}</h3>
-        <button class="add-btn" onclick="addRow('${tableId}')">+ Add item</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="add-btn" onclick="addRow('${tableId}')">+ Add item</button>
+          <button class="delete-meal" onclick="deleteMeal(this)">Delete meal</button>
+        </div>
       </div>
       <div class="table-wrap">
         <table id="${tableId}">
@@ -337,6 +416,14 @@
     mealsRoot.appendChild(section);
     addRow(tableId);
     mealCount++;
+  }
+
+  function deleteMeal(btn){
+    const section = btn.closest(".section");
+    if(confirm("Delete this meal card")){ 
+      section.remove();
+      updateTotals();
+    }
   }
 
   function addRow(tableId){
@@ -434,10 +521,8 @@
   function round1(n){ return Math.round(n * 10) / 10; }
 
   function removeRow(btn){
-    const table = btn.closest("table");
     btn.closest("tr").remove();
     updateTotals();
-    // if only header left, keep it, user can add again
   }
 
   function updateTotals(){
@@ -466,8 +551,38 @@
       `Calories ${round1(day.cal)} kcal, Protein ${round1(day.pro)} g, Fat ${round1(day.fat)} g, Carbs ${round1(day.carb)} g, Fiber ${round1(day.fiber)} g`;
   }
 
-  // seed four common meals
+  /* BMR and TDEE logic */
+  function calcBMR(){
+    const kg   = parseFloat(document.getElementById("weight").value) || 0;
+    const cm   = parseFloat(document.getElementById("height").value) || 0;
+    const age  = parseFloat(document.getElementById("age").value)    || 0;
+    const sex  = document.getElementById("gender").value;
+    const act  = parseFloat(document.getElementById("activity").value) || 1.2;
+    const goal = parseFloat(document.getElementById("goal").value) || 0;
+
+    // Mifflin St Jeor
+    const base = 10*kg + 6.25*cm - 5*age + (sex === "male" ? 5 : -161);
+    const bmr = Math.max(0, base);
+    const tdee = Math.max(0, bmr * act);
+    const target = Math.max(0, tdee * (1 + goal));
+
+    document.getElementById("bmrOut").textContent    = Math.round(bmr);
+    document.getElementById("tdeeOut").textContent   = Math.round(tdee);
+    document.getElementById("targetOut").textContent = Math.round(target);
+  }
+
+  ["weight","height","age"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", calcBMR);
+  });
+  ["gender","activity","goal"].forEach(id=>{
+    document.getElementById(id).addEventListener("change", calcBMR);
+  });
+
+  // default date and initial calculations
   document.getElementById("planDate").value = new Date().toISOString().split("T")[0];
+  calcBMR();
+
+  // seed four common meals
   addMealCard("Morning Drink");
   addMealCard("Breakfast");
   addMealCard("Lunch");
