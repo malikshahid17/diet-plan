@@ -15,8 +15,8 @@
       --ink:#222;
       --ink-soft:#555;
 
-      --red:#e63946;
-      --slate:#2c3e50;
+      --red:#e63946;     /* brand red */
+      --slate:#2c3e50;   /* deep slate */
     }
 
     html,body{height:100%;}
@@ -27,6 +27,8 @@
       color:var(--ink);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     main#printable{max-width:1080px;margin:28px auto;padding:18px;}
@@ -59,6 +61,7 @@
     .tagline{margin:0;font-weight:600;font-size:14px;color:var(--red);letter-spacing:.4px;}
     .nutri-banner{
       padding:8px 12px;background:var(--slate);color:#fff;font-size:14px;font-weight:600;border-radius:6px;display:inline-block;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .nutri-banner span{font-weight:700;color:#ffe082;}
     .nutri-banner .phone{margin-left:12px;font-style:italic;font-weight:500;color:#f9dede;}
@@ -76,39 +79,27 @@
       padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);
     }
 
-    /* BMR card */
-    .bmr-card{
+    .toolbar{
+      display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 16px;
+    }
+    .btn{
+      background:#fff;color:var(--ink);
       border:1px solid var(--line);
-      border-radius:12px;
-      background:#fff;
-      padding:14px;
-      margin:6px 0 20px;
+      padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:800;
     }
-    .bmr-head{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      background:var(--slate);color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:10px;
-    }
-    .bmr-grid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(160px, 1fr));
-      gap:10px;
-    }
-    .bmr-stats{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(120px, 1fr));
-      gap:10px;
-      margin-top:10px;
-    }
-    .stat{
-      background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-weight:700;
-    }
-    .stat small{display:block;font-weight:600;color:#666;}
+    .btn.primary{background:var(--red);color:#fff;border:none;}
+    .btn.icon{display:inline-flex;align-items:center;gap:8px;}
+    .btn .plus{font-weight:900;font-size:16px}
 
     /* sections */
     .section{margin:18px 0 24px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
     .section-header{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       padding:10px 14px;color:#fff;flex-wrap:wrap;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .section-title[contenteditable="true"]{
+      outline:none;border-bottom:1px dashed rgba(255,255,255,.45);
     }
     .section-header h3{margin:0;font-size:18px;}
     .add-btn{
@@ -126,7 +117,7 @@
     th{background:#f2f5f8;color:var(--slate);}
     .totals{margin:10px;padding:10px;text-align:center;font-weight:600;background:#f4f6f9;border-radius:6px;}
 
-    /* controls */
+    /* controls inside rows */
     select, input[type="number"], input[type="text"].custom-name, input[type="number"].custom-macro{
       width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);
     }
@@ -142,20 +133,20 @@
     .controls{margin-top:10px;}
     .print-btn{background:var(--red);color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:800;}
 
-    /* print only planner */
+    /* print only planner, keep colors */
     @page{size:A4;margin:10mm;}
     @media print{
+      *{-webkit-print-color-adjust: exact; print-color-adjust: exact;}
       body *{visibility:hidden;}
       #printable,#printable *{visibility:visible;}
       #printable{position:absolute;left:0;top:0;width:190mm;}
-      .add-btn,.remove-btn{display:none;}
+      .add-btn,.remove-btn,.btn{display:none !important;}
       .table-wrap{overflow:visible;}
     }
 
     /* mobile tweaks */
     @media (max-width: 900px){
-      .bmr-grid{grid-template-columns: repeat(2, minmax(160px, 1fr));}
-      .bmr-stats{grid-template-columns: repeat(2, minmax(120px, 1fr));}
+      .info-grid{grid-template-columns:1fr;gap:12px;}
     }
     @media (max-width: 768px){
       main#printable{padding:12px;margin:16px auto;}
@@ -168,9 +159,6 @@
       .brand-name{font-size:36px;}
       .tagline{font-size:13px;}
       .nutri-banner{font-size:13px;}
-
-      .info-grid{grid-template-columns:1fr;gap:12px;}
-      .field input, .field select{padding:12px;font-size:16px;}
 
       .section{margin:14px 0 18px;}
       .section-header h3{font-size:17px;}
@@ -185,8 +173,6 @@
       .brand-name{font-size:30px;}
       .nutri-banner{display:block;}
       table{min-width:640px;}
-      .bmr-grid{grid-template-columns: 1fr;}
-      .bmr-stats{grid-template-columns: 1fr;}
     }
   </style>
 </head>
@@ -204,7 +190,7 @@
         <h1 class="brand-name"><span class="accent">MUSCLE MAFIA</span> GYM KAHUTA</h1>
         <p class="tagline">"Fuel your body, power your mind, transform your life"</p>
         <div class="nutri-banner">
-          <span>Nutrition Specialist:</span> Abdul Nabeel
+          <span>Nutrition Specialist:</span> Abdul Nabeel Saqbi
           <span class="phone">📞 +92 349 8948105</span>
         </div>
       </header>
@@ -218,120 +204,17 @@
         <div class="field"><label>Age</label><input id="age" type="number" inputmode="numeric" placeholder="25"></div>
       </div>
 
-      <!-- BMR and TDEE -->
-      <section class="bmr-card" id="bmrCard">
-        <div class="bmr-head">
-          <strong>BMR and TDEE Calculator</strong>
-          <span style="font-size:13px;opacity:.9">Uses Mifflin St Jeor, then applies activity factor</span>
-        </div>
-        <div class="bmr-grid">
-          <div class="field">
-            <label>Gender</label>
-            <select id="gender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Activity Level</label>
-            <select id="activity">
-              <option value="1.2">Sedentary, little or no exercise</option>
-              <option value="1.375">Light, 1 to 3 days per week</option>
-              <option value="1.55">Moderate, 3 to 5 days per week</option>
-              <option value="1.725">Active, 6 to 7 days per week</option>
-              <option value="1.9">Very active, physical job or two sessions</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Goal</label>
-            <select id="goal">
-              <option value="0">Maintenance</option>
-              <option value="-0.15">Cut, about 15 percent deficit</option>
-              <option value="0.10">Lean bulk, about 10 percent surplus</option>
-            </select>
-          </div>
-        </div>
+      <div class="toolbar">
+        <button class="btn icon primary" onclick="addMealCard()"><span class="plus">+</span> Add meal</button>
+        <button class="btn" onclick="window.print()">Print or Save</button>
+      </div>
 
-        <div class="bmr-stats">
-          <div class="stat"><small>BMR, kcal per day</small><span id="bmrOut">0</span></div>
-          <div class="stat"><small>Maintenance, kcal per day</small><span id="tdeeOut">0</span></div>
-          <div class="stat"><small>Target intake, kcal per day</small><span id="targetOut">0</span></div>
-        </div>
-      </section>
-
-      <!-- Sections, alternating headers -->
-      <section class="section header-red" id="morning">
-        <div class="section-header">
-          <h3>Morning Drink</h3>
-          <button class="add-btn" onclick="addRow('morning-table')">+ Add item</button>
-        </div>
-        <div class="table-wrap">
-          <table id="morning-table">
-            <tr>
-              <th>Item</th><th>Serving</th><th>Qty</th>
-              <th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th>
-              <th>Action</th>
-            </tr>
-          </table>
-        </div>
-        <div class="totals" id="morning-total"></div>
-      </section>
-
-      <section class="section header-slate" id="breakfast">
-        <div class="section-header">
-          <h3>Breakfast</h3>
-          <button class="add-btn" onclick="addRow('breakfast-table')">+ Add item</button>
-        </div>
-        <div class="table-wrap">
-          <table id="breakfast-table">
-            <tr>
-              <th>Item</th><th>Serving</th><th>Qty</th>
-              <th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th>
-              <th>Action</th>
-            </tr>
-          </table>
-        </div>
-        <div class="totals" id="breakfast-total"></div>
-      </section>
-
-      <section class="section header-red" id="lunch">
-        <div class="section-header">
-          <h3>Lunch</h3>
-          <button class="add-btn" onclick="addRow('lunch-table')">+ Add item</button>
-        </div>
-        <div class="table-wrap">
-          <table id="lunch-table">
-            <tr>
-              <th>Item</th><th>Serving</th><th>Qty</th>
-              <th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th>
-              <th>Action</th>
-            </tr>
-          </table>
-        </div>
-        <div class="totals" id="lunch-total"></div>
-      </section>
-
-      <section class="section header-slate" id="dinner">
-        <div class="section-header">
-          <h3>Dinner</h3>
-          <button class="add-btn" onclick="addRow('dinner-table')">+ Add item</button>
-        </div>
-        <div class="table-wrap">
-          <table id="dinner-table">
-            <tr>
-              <th>Item</th><th>Serving</th><th>Qty</th>
-              <th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th>
-              <th>Action</th>
-            </tr>
-          </table>
-        </div>
-        <div class="totals" id="dinner-total"></div>
-      </section>
+      <!-- Initial meals get injected here -->
+      <div id="meals"></div>
 
       <div class="summary">
         <h3>Daily Nutrition Summary</h3>
         <p id="daily-summary">Calories 0 kcal, Protein 0 g, Fat 0 g, Carbs 0 g, Fiber 0 g</p>
-        <div class="controls"><button class="print-btn" onclick="window.print()">Print or Save</button></div>
       </div>
 
     </div>
@@ -339,71 +222,122 @@
 </main>
 
 <script>
-  /* Nutrition database, macros per serving */
+  /* Nutrition database, macros per serving
+     names are clean, amounts are in Serving, Qty multiplies them
+  */
   const DB = {
+    // grains, dairy, protein
     "Oats":[ s("100 g",389,16.9,6.9,66.3,10.6), s("50 g",195,8.5,3.5,33.2,5.3) ],
     "Whey Protein":[ s("1 scoop, 30 g",120,24,2,3,1) ],
-    "Eggs, Whole":[ s("1 pc, 50 g",72,6.3,4.8,0.4,0) ],
-    "Egg Whites":[ s("1 pc, 33 g",17,3.6,0,0.2,0) ],
+    "Eggs, Whole":[ s("1 pc",72,6.3,4.8,0.4,0) ],
+    "Egg Whites":[ s("1 pc",17,3.6,0,0.2,0) ],
     "Milk":[ s("250 ml",155,8,8,12,0) ],
     "Yogurt, Plain":[ s("200 g",122,7,6,9,0) ],
-    "Greek Yogurt":[ s("170 g cup",100,17,0,6,0) ],
+    "Greek Yogurt":[ s("170 g",100,17,0,6,0) ],
     "Paneer":[ s("100 g",296,18,22,4,0) ],
-    "Lassi":[ s("250 ml",150,6,6,18,0) ],
     "Chicken Breast":[ s("100 g cooked",165,31,3.6,0,0) ],
     "Chicken Thigh":[ s("100 g cooked",209,26,10.9,0,0) ],
     "Beef, Lean":[ s("100 g cooked",250,26,15,0,0) ],
     "Mutton":[ s("100 g cooked",294,25,21,0,0) ],
     "Fish, Rohu":[ s("100 g",97,18,3,0,0) ],
     "Fish, Salmon":[ s("100 g",208,20,13,0,0) ],
-    "Tuna, Canned":[ s("100 g drained",132,29,1,0,0) ],
-    "Chapati":[ s("1 pc, 50 g",120,3.6,3,18,2) ],
-    "Roti, Whole Wheat":[ s("1 pc, 50 g",120,3.6,3,18,2) ],
-    "Paratha":[ s("1 pc, 80 g",260,5,14,28,2) ],
+    "Tuna, Canned":[ s("100 g",132,29,1,0,0) ],
+    "Chapati":[ s("1 pc",120,3.6,3,18,2) ],
+    "Roti, Whole Wheat":[ s("1 pc",120,3.6,3,18,2) ],
+    "Paratha":[ s("1 pc",260,5,14,28,2) ],
     "White Rice":[ s("1 cup cooked, 150 g",205,4.2,0.4,45,0.6) ],
     "Brown Rice":[ s("1 cup cooked, 150 g",216,5,1.8,45,3.5) ],
     "Quinoa":[ s("1 cup cooked, 185 g",222,8,3.6,39,5) ],
     "Boiled Rice":[ s("1 cup cooked, 150 g",205,4.2,0.4,45,0.6) ],
-    "Dal, Masoor":[ s("1 cup cooked, 198 g",230,18,0.8,40,15) ],
-    "Dal, Moong":[ s("1 cup cooked, 202 g",212,14,0.8,38,15) ],
-    "Dal, Chana":[ s("1 cup cooked, 164 g",269,15,4,45,12) ],
-    "Chana, Boiled":[ s("1 cup cooked, 164 g",269,15,4,45,12) ],
-    "Rajma, Kidney Beans":[ s("1 cup cooked, 177 g",225,15,0.9,40,11) ],
-    "Lobia, Black eyed beans":[ s("1 cup cooked, 170 g",200,13,0.7,35,11) ],
-    "Potato, Boiled":[ s("1 medium, 173 g",161,4.3,0.2,37,3.8) ],
-    "Sweet Potato":[ s("1 medium, 130 g",112,2,0.1,26,4) ],
-    "Mixed Sabzi":[ s("1 cup cooked, 150 g",110,4,5,14,4) ],
-    "Palak, Spinach":[ s("1 cup cooked, 180 g",41,5.3,0.5,7,4) ],
-    "Bhindi, Okra":[ s("1 cup cooked, 160 g",190,5,10,22,8) ],
-    "Cabbage":[ s("1 cup cooked, 150 g",33,2,0.2,8,4) ],
-    "Cauliflower":[ s("1 cup cooked, 150 g",30,2.3,0.6,5,3) ],
-    "Peanut Butter":[ s("1 tbsp, 16 g",94,4,8,3,1) ],
-    "Peanuts":[ s("30 g",170,7,14,5,2) ],
+
+    // legumes
+    "Dal, Masoor":[ s("1 cup cooked",230,18,0.8,40,15) ],
+    "Dal, Moong":[ s("1 cup cooked",212,14,0.8,38,15) ],
+    "Dal, Chana":[ s("1 cup cooked",269,15,4,45,12) ],
+    "Chickpeas, Boiled":[ s("1 cup cooked",269,15,4,45,12) ],
+    "Rajma, Kidney Beans":[ s("1 cup cooked",225,15,0.9,40,11) ],
+    "Lobia, Black eyed beans":[ s("1 cup cooked",200,13,0.7,35,11) ],
+
+    // nuts and seeds
     "Almonds":[ s("30 g",173,6,15,6,3.5) ],
     "Walnuts":[ s("30 g",185,4.3,18.5,4,2) ],
     "Cashews":[ s("30 g",155,5,12,9,1) ],
     "Pistachios":[ s("30 g",159,6,13,8,3) ],
+    "Peanuts":[ s("30 g",170,7,14,5,2) ],
+    "Peanut Butter":[ s("1 tbsp, 16 g",94,4,8,3,1) ],
     "Chia Seeds":[ s("1 tbsp, 12 g",58,2,4,5,5) ],
     "Flaxseed":[ s("1 tbsp, 10 g",55,1.9,4.3,3,2.8) ],
-    "Dates":[ s("3 pcs, 24 g",66,0.5,0.1,18,2) ],
-    "Raisins":[ s("30 g",90,1,0,24,1) ],
-    "Figs, Dried":[ s("2 pcs, 40 g",95,1.2,0.4,24,3.5) ],
-    "Banana":[ s("1 medium, 118 g",105,1.3,0.3,27,3.1) ],
-    "Apple":[ s("1 medium, 182 g",95,0.5,0.3,25,4.4) ],
-    "Orange":[ s("1 medium, 131 g",62,1.2,0.2,15,3) ],
+    "Pumpkin Seeds":[ s("30 g",170,9,14,5,2) ],
+    "Watermelon Seeds":[ s("30 g",170,8,13,4,0) ],
+    "Basil Seeds":[ s("1 tbsp, 12 g",58,2,3,5,5) ],  // approx
+
+    // fruits and veg
+    "Banana":[ s("1 medium",105,1.3,0.3,27,3.1) ],
+    "Apple":[ s("1 medium",95,0.5,0.3,25,4.4) ],
+    "Orange":[ s("1 medium",62,1.2,0.2,15,3) ],
     "Mango":[ s("1 cup, 165 g",99,1.4,0.6,25,2.6) ],
     "Berries, Mixed":[ s("1 cup, 148 g",84,1,0.5,21,3.6) ],
-    "Bread, Brown":[ s("1 slice, 30 g",75,3,1,13,2) ],
-    "Bread, Multigrain":[ s("1 slice, 40 g",110,5,2,19,3) ],
-    "Olive Oil":[ s("1 tbsp, 14 g",119,0,14,0,0) ],
-    "Ghee":[ s("1 tbsp, 14 g",123,0,14,0,0) ],
+    "Dates":[ s("1 pc",22,0.2,0,6,0.6) ],
+    "Figs, Dried":[ s("1 pc",47,0.6,0.2,12,1.6) ],
+    "Raisins":[ s("30 g",90,1,0,24,1) ],
+    "Beetroot":[ s("100 g",43,1.6,0.2,10,2.8) ],
+    "Cucumber":[ s("100 g",15,0.7,0.1,3.6,0.5) ],
+    "Carrot":[ s("100 g",41,0.9,0.2,10,2.8) ],
+    "Palak, Spinach":[ s("1 cup cooked, 180 g",41,5.3,0.5,7,4) ],
+    "Bhindi, Okra":[ s("1 cup cooked, 160 g",190,5,10,22,8) ],
+    "Cabbage":[ s("1 cup cooked, 150 g",33,2,0.2,8,4) ],
+    "Cauliflower":[ s("1 cup cooked, 150 g",30,2.3,0.6,5,3) ],
+    "Lemon":[ s("1 medium",17,0.6,0.2,5.4,1.6) ],
+
+    // drinks and extras
+    "Apple Juice":[ s("250 ml",114,0,0,28,0.2) ],
+    "Orange Juice":[ s("250 ml",112,2,0.5,26,0.5) ],
+    "Coffee":[ s("240 ml",2,0.3,0,0,0) ],
+    "Green Tea":[ s("240 ml",2,0,0,0,0) ],
     "Honey":[ s("1 tbsp, 21 g",64,0,0,17,0) ],
     "Jaggery":[ s("1 tsp, 7 g",26,0,0,6.7,0) ],
+    "Ghee":[ s("1 tbsp, 14 g",123,0,14,0,0) ],
+    "Olive Oil":[ s("1 tbsp, 14 g",119,0,14,0,0) ],
+    "Gond Katera":[ s("1 tsp",30,0,0,7,0) ],
+
     "Custom":[ s("per serving",0,0,0,0,0) ]
   };
   function s(serving, cal, pro, fat, carb, fiber){ return { serving, cal, pro, fat, carb, fiber }; }
-
   const QTY_OPTIONS = [1,2,3,4,5,6,8,10];
+
+  /* Add initial four meals and allow adding more */
+  const mealsRoot = document.getElementById("meals");
+  let mealCount = 0;
+  const headerColors = ["header-red","header-slate"]; // alternate
+
+  function addMealCard(title="Morning Drink"){
+    const colorClass = headerColors[mealCount % headerColors.length];
+    const idBase = `meal${Date.now()}_${Math.floor(Math.random()*10000)}`;
+    const tableId = `${idBase}-table`;
+    const totalId = `${idBase}-total`;
+
+    const section = document.createElement("section");
+    section.className = `section ${colorClass}`;
+    section.innerHTML = `
+      <div class="section-header">
+        <h3 class="section-title" contenteditable="true">${title}</h3>
+        <button class="add-btn" onclick="addRow('${tableId}')">+ Add item</button>
+      </div>
+      <div class="table-wrap">
+        <table id="${tableId}">
+          <tr>
+            <th>Item</th><th>Serving</th><th>Qty</th>
+            <th>Calories</th><th>Protein</th><th>Fat</th><th>Carbs</th><th>Fiber</th>
+            <th>Action</th>
+          </tr>
+        </table>
+      </div>
+      <div class="totals" id="${totalId}"></div>
+    `;
+    mealsRoot.appendChild(section);
+    addRow(tableId);
+    mealCount++;
+  }
 
   function addRow(tableId){
     const t = document.getElementById(tableId);
@@ -500,16 +434,17 @@
   function round1(n){ return Math.round(n * 10) / 10; }
 
   function removeRow(btn){
+    const table = btn.closest("table");
     btn.closest("tr").remove();
     updateTotals();
+    // if only header left, keep it, user can add again
   }
 
   function updateTotals(){
     let day = {cal:0,pro:0,fat:0,carb:0,fiber:0};
-    const ids = ["morning-table","breakfast-table","lunch-table","dinner-table"];
+    const tables = Array.from(document.querySelectorAll("#meals table"));
 
-    ids.forEach(id=>{
-      const table = document.getElementById(id);
+    tables.forEach(table=>{
       let meal = {cal:0,pro:0,fat:0,carb:0,fiber:0};
       for(let i=1;i<table.rows.length;i++){
         const row = table.rows[i];
@@ -519,8 +454,10 @@
         meal.carb  += parseFloat(row.querySelector(".carb").textContent)  || 0;
         meal.fiber += parseFloat(row.querySelector(".fiber").textContent) || 0;
       }
+      const totalId = table.id.replace("table","total");
       const out = `Total ${round1(meal.cal)} kcal, ${round1(meal.pro)} g protein, ${round1(meal.fat)} g fat, ${round1(meal.carb)} g carbs, ${round1(meal.fiber)} g fiber`;
-      document.getElementById(id.replace("table","total")).innerText = out;
+      const tgt = document.getElementById(totalId);
+      if(tgt) tgt.innerText = out;
 
       day.cal += meal.cal; day.pro += meal.pro; day.fat += meal.fat; day.carb += meal.carb; day.fiber += meal.fiber;
     });
@@ -529,39 +466,12 @@
       `Calories ${round1(day.cal)} kcal, Protein ${round1(day.pro)} g, Fat ${round1(day.fat)} g, Carbs ${round1(day.carb)} g, Fiber ${round1(day.fiber)} g`;
   }
 
-  /* BMR and TDEE logic */
-  function calcBMR(){
-    const kg   = parseFloat(document.getElementById("weight").value) || 0;
-    const cm   = parseFloat(document.getElementById("height").value) || 0;
-    const age  = parseFloat(document.getElementById("age").value)    || 0;
-    const sex  = document.getElementById("gender").value;
-    const act  = parseFloat(document.getElementById("activity").value) || 1.2;
-    const goal = parseFloat(document.getElementById("goal").value) || 0;
-
-    // Mifflin St Jeor
-    const base = 10*kg + 6.25*cm - 5*age + (sex === "male" ? 5 : -161);
-    const bmr = Math.max(0, base);
-    const tdee = Math.max(0, bmr * act);
-    const target = Math.max(0, tdee * (1 + goal));
-
-    document.getElementById("bmrOut").textContent    = Math.round(bmr);
-    document.getElementById("tdeeOut").textContent   = Math.round(tdee);
-    document.getElementById("targetOut").textContent = Math.round(target);
-  }
-
-  ["weight","height","age"].forEach(id=>{
-    document.getElementById(id).addEventListener("input", calcBMR);
-  });
-  ["gender","activity","goal"].forEach(id=>{
-    document.getElementById(id).addEventListener("change", calcBMR);
-  });
-
-  // default date and initial calculations
+  // seed four common meals
   document.getElementById("planDate").value = new Date().toISOString().split("T")[0];
-  calcBMR();
-
-  // seed one row per meal
-  ["morning-table","breakfast-table","lunch-table","dinner-table"].forEach(addRow);
+  addMealCard("Morning Drink");
+  addMealCard("Breakfast");
+  addMealCard("Lunch");
+  addMealCard("Dinner");
 </script>
 </body>
 </html>
